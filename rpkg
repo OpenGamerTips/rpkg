@@ -1,0 +1,54 @@
+#!/bin/sh
+# rpkg (Real-Package-Manager) by OpenGamerTips
+# The all-in-one package manager for Arch-Based ONLY Linux distros. (Arch, Manjaro, etc. NOT Debian, Ubuntu)
+
+if [[ $EUID -ne 0 ]]; then
+   echo -e "\033[0;33mrpkg must be run as root as it modifies readonly files!"
+   exit 1
+fi
+
+if [ "$1" == "-h" ]; then
+  echo -e "rpkg -deb install <file> - Install a debian package even if you are on an arch-based distro.\nrpkg -deb remove <package> - Not supported.\n\nrpkg -pac install <package> - Install package using pacman.\nrpkg -pac remove <package> - Remove package using pacman.\nrpkg -pac update - Update pacman.\n\nrpkg -sna install <package> - Install package using Snap.\nrpkg -sna remove <package> - Remove package using Snap.\n\nDependencies: p7zip-full"
+fi
+
+if [ "$1" == "" ]; then
+  echo -e "Try typing 'sudo rpkg -h' for help."
+fi
+
+if [ "$1" == "-deb" ]; then # Install .deb file.
+  if [ "$2" == "install" ]; then
+    echo -e "Preparing to inatall files..."
+    echo -e "Extracting files..."
+    sudo 7z x -so ${3} | tar xf - -C / || echo -e "\033[0;33mError - Are dependencies installed? Did you pick the wrong the wrong file?" && exit 0
+    echo -e "Extracted files! \033[0;36mSetting up..."
+    echo -e "\033[0;32mPackage Installed."
+  fi
+
+  if [ "$2" == "remove" ]; then
+    echo Not supported.
+  fi
+fi
+
+if [ "$1" == "-pac" ]; then # Install through pacman.
+  if [ "$2" == "install" ]; then
+    sudo pacman -S ${3}
+  fi
+
+  if [ "$2" == "remove" ]; then
+    sudo pacman -R ${3}
+  fi
+
+  if [ "$2" == "update" ]; then
+    sudo pacman -Syu
+  fi
+fi
+
+if [ "$1" == "-sna" ]; then # Install through snap.
+  if [ "$2" == "install" ]; then
+    sudo snap install ${3} || echo -e "\033[0;33mError - Are dependencies installed?"
+  fi
+
+  if [ "$2" == "remove" ]; then
+    sudo snap remove ${3} || echo -e "\033[0;33mError - Are dependencies installed?"
+  fi
+fi
