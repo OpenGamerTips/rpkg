@@ -1,5 +1,5 @@
 # rpkg - The all-in-one package manager.
-
+(retarded thing i made when learning linux. it doesn't install dependencies so it's basically useless)
 Rpkg is an all-in-one package manager that is for Arch-Based Linux Distros. This package manager can successfuly install *.deb* packages and fully support it.
 
 ### Installation
